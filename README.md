@@ -1,6 +1,8 @@
 # APACHE-KAFKA
 ![kafka3](https://github.com/user-attachments/assets/38cb1b6e-6c5b-4cf8-a2d9-752340112c62)
+
 ![kafka2](https://github.com/user-attachments/assets/19762c43-55cf-407e-a8c2-9e50c2feb40e)
+
 ![Architecture (1)](https://github.com/user-attachments/assets/7fca43cb-f11a-44a7-8171-cfca6bf2c7c4)
 
 
