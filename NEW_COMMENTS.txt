@@ -1,0 +1,132 @@
+wget https://archive.apache.org/dist/kafka/3.3.1/kafka_2.12-3.3.1.tgz
+
+ls
+
+tar -xvf kafka_2.12-3.3.1.tgz
+
+ls
+
+sudo yum install java-1.8.0-openjdk
+
+java -version
+
+cd kafka_2.12-3.3.1/
+
+bin/zookeeper-server-start.sh config/zookeeper.properties
+
+
+
+
+
+
+------ CREATE NEW CMD WINDOW AND SIMILARLY CONNECT TO EC2 -----------
+
+export KAFKA_HEAP_OPTS="-Xmx256M -Xms128M"
+
+cd kafka_2.12-3.3.1
+
+bin/kafka-server-start.sh config/server.properties
+
+
+
+NOW STOP BOTH SERVERS BY  CTRL+Z   AS THEY ARE ACCESSING EC2 USING PRIVATTE IP, WE HAVE TO USE PUBLIC IP
+
+GO TO ZOOKEEPER ONE FIRST CONSOLE:
+
+sudo nano config/server.properties
+
+GOTO ADVERTISED_LISTENERS to public ip of the EC2 instance
+UNCOMMENT THAT AND INSTEAD YOUR ID GIVE PUBLIC INSTANCE IP 
+it will look like
+advertised.listeners=PLAINTEXT://13.60.84.55:9092
+
+now do -> ctrl+x then y and then hit enter
+
+NOW AGAIN START ZOOKEEPER SERVER
+bin/zookeeper-server-start.sh config/zookeeper.properties
+
+
+
+
+---- INCASE IT DOES NOT RUN -----------------------------------------
+lsof -i :2181
+
+[ec2-user@ip-172-31-36-183 kafka_2.12-3.3.1]$ lsof -i :2181
+COMMAND   PID     USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+java    29610 ec2-user  126u  IPv6 118907      0t0  TCP *:eforward (LISTEN)
+
+[ec2-user@ip-172-31-36-183 kafka_2.12-3.3.1]$ kill -9 29610
+
+
+VERIFY PROCESS HAS STOIPPED
+lsof -i :2181
+
+NOW PROCESS SHOWS
+
+NOW AGAIN RUN 
+
+bin/zookeeper-server-start.sh config/zookeeper.properties
+
+IT SHOULD RUN 
+-----------------------------------------------------------------
+
+NOW START KAFKA SEERVER AGAIN ON SECOND CONSOLE
+bin/kafka-server-start.sh config/server.properties
+
+INCASE IT DOES NOT START ALLOCATE SOME MEMORYAD THEN START
+export KAFKA_HEAP_OPTS="-Xmx256M -Xms128M"
+bin/kafka-server-start.sh config/server.properties
+
+--- NOW YOU CAN SEE KFKA SERVER RUNNING AT PUBLIC IP 
+
+------------ NOW NEED TO PROVIDE SECURITY ACCESS FROM OUR LOCAL MACHINE 
+GOTO EC2-> SECURITY-> SECURITY GROUPS(CLICK ON LINK-> EDIT IN BOUNDS) -> ADD RULE -> ALL TRAFIC -> ANYWHERE-IPV4 -> SAVE RULE
+
+NOW WE CAN ACCESS EC2 FROM OUR IP LOCAL MACHINE 
+
+--------NOW OPEN THIRD WINDOW
+
+CONNECT TO EC2 INSANCE USING SSH
+
+GOTO KAFKA DIRECTORY cd kafka_2.12-3.3.1
+
+NOW CREATE TOIPIC:
+bin/kafka-topics.sh --create --topic demo_test --bootstrap-server {Put the Public IP of your EC2 Instance:9092} --replication-factor 1 --partitions 1
+
+                                                                                    |
+                                                                                    V
+bin/kafka-topics.sh --create --topic demo_test --bootstrap-server 13.60.84.55:9092 --replication-factor 1 --partitions 1
+
+
+
+
+Start Producer:
+--------------------------
+bin/kafka-console-producer.sh --topic demo_test --bootstrap-server {Put the Public IP of your EC2 Instance:9092} 
+
+                                                                                    | 
+                                                                                    V
+
+bin/kafka-console-producer.sh --topic demo_test --bootstrap-server 13.60.84.55:9092
+
+
+
+-------------OPEN 4TH NEW CONSOLE
+Start Consumer:
+-------------------------
+Duplicate the session & enter in a new console --
+
+cd kafka_2.12-3.3.1
+
+
+bin/kafka-console-consumer.sh --topic demo_test --bootstrap-server {Put the Public IP of your EC2 Instance:9092}
+                                                                               |
+                                                                               V
+bin/kafka-console-consumer.sh --topic demo_test --bootstrap-server 13.60.84.55:9092
+
+
+
+
+
+
+
