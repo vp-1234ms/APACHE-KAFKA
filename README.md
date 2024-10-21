@@ -6,6 +6,10 @@
 ![Architecture (1)](https://github.com/user-attachments/assets/7fca43cb-f11a-44a7-8171-cfca6bf2c7c4)
 
 
+![WhatsApp Image 2024-10-21 at 12 05 25 AM](https://github.com/user-attachments/assets/f52750d1-4159-48a4-8231-48eb99ea1fc4)
+
+
+![WhatsApp Image 2024-10-21 at 12 10 30 AM](https://github.com/user-attachments/assets/1dafdae8-9a6a-4f5a-a408-ff74cd29c86e)
 
 Apache Kafka
 It is used to deliver live data and is used for building data pipelines and streaming applications.
